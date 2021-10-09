@@ -1,0 +1,5 @@
+venv/
+
+geekshop/.idea/
+
+geekshop/geekshop/__pycache__/
