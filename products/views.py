@@ -2,7 +2,6 @@ import json
 import os
 from django.shortcuts import render
 
-# Create your views here.
 
 def index(request):
     context = {
@@ -12,7 +11,6 @@ def index(request):
 
 
 def products(request):
-    file = 'fixturse/products.json'
     context = {
         'title': 'GeekShop - Каталог',
         'products': json.load(open(f'{os.path.dirname(__file__)}/fixturse/products.json', encoding='utf-8'))
