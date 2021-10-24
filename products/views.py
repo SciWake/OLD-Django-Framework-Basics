@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from products.models import Product
+from products.models import Product, ProductCategory
 
 
 def index(request):
@@ -12,6 +12,7 @@ def index(request):
 def products(request):
     context = {
         'title': 'GeekShop - Каталог',
-        'products': Product.objects.all()
+        'products': Product.objects.all(),
+        'categories': ProductCategory.objects.all()
     }
     return render(request, 'products/products.html', context)
