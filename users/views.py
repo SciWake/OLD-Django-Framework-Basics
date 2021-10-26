@@ -32,6 +32,7 @@ def registration(request):
             return HttpResponseRedirect(reverse('users:login'))
     else:
         form = UserRegistrationForm()
+
     context = {'title': 'GeekShop - Регистрация', 'form': form}
     return render(request, 'users/registration.html', context)
 
@@ -45,6 +46,7 @@ def profile(request):
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=request.user)
+
     context = {'title': 'GeekShop - Профиль', 'form': form, 'baskets': Basket.objects.filter(user=request.user)}
     return render(request, 'users/profile.html', context)
 
