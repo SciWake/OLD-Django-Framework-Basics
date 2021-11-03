@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
+from django.urls import reverse
 
 from users.models import User
+from my_admin.forms import UserAdminRegistrationForm
 
 
 def index(request):
@@ -9,7 +11,14 @@ def index(request):
 
 
 def admin_users_create(request):
-    context = {'title': 'GeekShop - Создание пользователей'}
+    if request.method == 'POST':
+        form = UserAdminRegistrationForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('my_admin:admin_users'))
+    else:
+        form = UserAdminRegistrationForm()
+    context = {'title': 'Админ-панель - Создание пользователя', 'form': form}
     return render(request, 'my_admin/admin-users-create.html', context)
 
 
