@@ -30,6 +30,11 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('my_admin:admin_users')
     template_name = 'my_admin/admin-users-create.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(UserCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Админ-панель - Создание пользователя'
+        return context
+
     @method_decorator(user_passes_test(lambda u: u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         return super(UserListView, self).dispatch(request, *args, **kwargs)
@@ -43,7 +48,7 @@ class UserUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserUpdateView, self).get_context_data(**kwargs)
-        context['title'] = 'Админ-панель - Редактирование пользовтаеля'
+        context['title'] = 'Админ-панель - Обновление пользовтаеля'
         return context
 
     @method_decorator(user_passes_test(lambda u: u.is_staff))
