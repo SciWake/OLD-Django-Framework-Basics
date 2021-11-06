@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -18,12 +19,20 @@ class UserListView(ListView):
     model = User
     template_name = 'my_admin/admin-users-read.html'
 
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
+
 
 class UserCreateView(CreateView):
     model = User
     form_class = UserAdminRegistrationForm
     success_url = reverse_lazy('my_admin:admin_users')
     template_name = 'my_admin/admin-users-create.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 
 class UserUpdateView(UpdateView):
@@ -32,10 +41,14 @@ class UserUpdateView(UpdateView):
     success_url = reverse_lazy('my_admin:admin_users')
     template_name = 'my_admin/admin-users-update-delete.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(UserUpdateView, self).get_context_data(**kwargs)
-    #     context['title'] = 'Админ-панель - Редактирование пользовтаеля'
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Админ-панель - Редактирование пользовтаеля'
+        return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 
 class UserDeleteView(DeleteView):
@@ -48,6 +61,11 @@ class UserDeleteView(DeleteView):
         success_url = self.get_success_url()
         self.object.safe_delete()
         return HttpResponseRedirect(success_url)
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
+
 
 # @user_passes_test(lambda user: user.is_staff)
 # def admin_users_delete(request, id):
